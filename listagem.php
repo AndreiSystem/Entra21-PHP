@@ -27,15 +27,30 @@
 	// }
 
 	// Verificação se existe alerta com JSON
-	if (isset($_GET['alerta'])) {
-		$alerta = true;
-		$array_alerta = (array) json_decode($_GET['alerta']);
+	// if (isset($_GET['alerta'])) {
+	// 	$alerta = true;
+	// 	$array_alerta = (array) json_decode($_GET['alerta']);
 
-		$tipo_alerta = $array_alerta["tipo"];
-		$mensagem_alerta = $array_alerta["mensagem"];
-	} else {
-		$alerta = false;
+	// 	$tipo_alerta = $array_alerta["tipo"];
+	// 	$mensagem_alerta = $array_alerta["mensagem"];
+	// } else {
+	// 	$alerta = false;
+	// }
+
+	// Verificar se existe algum alerta via COOKIE
+
+	if (isset($_COOKIE['alerta']) && !is_null($_COOKIE['alerta'])) {
+		$alerta = unserialize($_COOKIE['alerta']);
+		setcookie('alerta');
 	}
+	
+	// 	session_start();
+
+	// if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
+	// 	echo "Bem vindo ao sistema. Você está logado.";
+	// } else {
+	// 	echo "Página restrita. Faça login para continuar.";
+	// }
 ?>
 
 <!DOCTYPE html>
@@ -48,6 +63,33 @@
 </head>
 <body class="bg-secondary">
 
+             <!-- NAVEGAÇÃO -->
+	<nav class="navbar navbar-dark bg-primary">
+		<nav class="navbar navbar-expand-lg navbar-primary bg-primary">
+			<a class="navbar-brand" href="#">NOME DO ALUNO</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="listagem.php">Listagem <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Notas </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Turmas </a>
+					</li>
+				</ul>
+					<ul href="login.php" class="nav navbar-nav navbar-right float-left">
+						<li>
+							<a href="login.php" class="text-white">Sair</a>
+						</li>
+					</ul>														
+			</div>
+		</nav>
+	</nav>
 
 	<div class="container-fluid">
 		<div class="container">
@@ -59,14 +101,14 @@
 					<div class="card">
 						<div class="card-body">
 									<!-- PHP -->							
-							<?php if ($alerta) : ?>
-							<div class="alert alert-<?=$tipo_alerta?>">
-								<?=$mensagem_alerta?>
+							<?php if (isset($alerta)) :?>
+							<div class="alert alert-<?=$alerta['tipo']?>">
+								<?=$alerta['mensagem']?>
 							</div>
 							<?php endif;?>
 									<!-- Fim do PHP -->
 							<a href="edicao.php?id=novo" class="btn btn-success mb-3">Novo Aluno</a>
-							<a href="historico.php" class="btn btn-dark mb-3">Histórico</a>
+							<a href="historico.php" class="btn btn-dark mb-3 float-right">Histórico de dados</a>
 
 							<table class="table table-striped table-hover">
 								<thead>

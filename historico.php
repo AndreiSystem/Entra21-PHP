@@ -3,9 +3,21 @@
 	// Capturando a informação do COOKIE
 	if (isset($_COOKIE['historico'])) {
 		$historico_cookie = unserialize($_COOKIE['historico']);
+		$historico = array_reverse(unserialize($_COOKIE['historico']));
 	} else {
-		echo "UAU";
+		$historico[] = [
+			'tipo' => 'info',
+			'mensagem' => '<center>Você não tem histórico.</center>'
+		];
 	}
+
+		session_start();
+
+	// if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
+	// 	echo "Bem vindo ao sistema. Você está logado.";
+	// } else {
+	// 	echo "Página restrita. Faça login para continuar.";
+	// }
 ?>
 
 
@@ -18,6 +30,34 @@
 
 </head>
 <body class="bg-secondary">
+
+             <!-- NAVEGAÇÃO -->
+	<nav class="navbar navbar-dark bg-primary">
+		<nav class="navbar navbar-expand-lg navbar-primary bg-primary">
+			<a class="navbar-brand" href="#">NOME DO ALUNO</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarText">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="listagem.php">Listagem <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Notas </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Turmas </a>
+					</li>
+				</ul>
+					<ul href="login.php" class="nav navbar-nav navbar-right float-left">
+						<li>
+							<a href="login.php" class="text-white">Sair</a>
+						</li>
+					</ul>														
+			</div>
+		</nav>
+	</nav>
 
 
 	<div class="container-fluid">
@@ -40,13 +80,11 @@
 
 		<?php foreach($historico_cookie as $key => $value) { ?>
 
-		<tr class="table-<?=$value['tipo']?> text-center">
+		<tr class="table-<?=$value['tipo']?>">
 			<td><?=$value['mensagem']?></td>
 		</tr>
 
 		<?php } ?>
-
-
 
 								</tbody>
 
