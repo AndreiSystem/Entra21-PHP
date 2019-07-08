@@ -43,7 +43,8 @@
 						$erros[] = "<li> Usuário ou senha não confere</li>";
 					}
 				} else {
-					$erros[] = "<li> Usuário inexistente </li>";
+					$alerta["tipo"] = "danger";
+					$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					
 				}
 			}	
 	}
@@ -92,6 +93,11 @@
 									<label>
 										<input type="checkbox" value="registrar-me"> Lembrar minha senha
 									</label>
+									<?php if (isset($alerta)) :?>
+									<div class="alert alert-<?=$alerta['tipo']?>">
+										<?=$alerta['mensagem']?>
+									</div>
+									<?php endif;?>
 									<button class="btn btn-lg btn-primary btn-block" type="submit" name="btn-entrar">Entrar</button>
 									<p class="mt-5 mb-3 text-muted">Entra21-2019</p>
 								</form>
