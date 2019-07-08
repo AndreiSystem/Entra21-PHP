@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 error_reporting(0);
 
 	// conexão com banco de dados
@@ -12,6 +14,15 @@ $con = mysqli_connect(HOST, USER, PASS, DB);
 if (!$con) {
 	die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
 }
+	// Sessão
+	session_start();
+
+	// Verificação
+	if (!isset($_SESSION['logado'])) {
+		header('Location: login.php?=logout');
+	}
+
+
 
 	// Consulta no banco de dados
 if (isset($_GET["id"]) && !empty($_GET["id"])) {
@@ -217,7 +228,7 @@ if (isset($_POST["btnExcluir"])) {
 				</ul>
 					<ul href="login.php" class="nav navbar-nav navbar-right float-left">
 						<li>
-							<a href="login.php" class="text-white">Sair</a>
+							<a href="logout.php" class="text-white">Sair</a>
 						</li>
 					</ul>														
 			</div>

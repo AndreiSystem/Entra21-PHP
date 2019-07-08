@@ -1,21 +1,31 @@
 <?php
 	error_reporting(0);
-
 	// conexão com banco de dados
 	CONST HOST = "127.0.0.1";
 	CONST USER = "root";
 	CONST PASS = "";
 	CONST DB =   "crud";
-
 	$con = mysqli_connect(HOST, USER, PASS, DB);
-
 	if (!$con) {
 	    die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
 	}
+	
+	// Sessão
+	session_start();
+
+	// Verificação
+	if (!isset($_SESSION['logado'])) {
+		header('Location: login.php?=logout');
+	}
+
+
 
 	// Consulta no banco de dados
+	$id = $_SESSION['id_usuario'];
 	$sqlAlunos = "SELECT * FROM alunos";
 	$queryAlunos = mysqli_query($con, $sqlAlunos);
+	$dados = mysqli_fetch_array($resultado);
+	mysqli_close($con);
 
 	// Verificação se existe alerta
 	// if (isset($_GET['tipo_alerta']) && isset($_GET['mensagem_alerta'])) {
@@ -25,32 +35,28 @@
 	// } else {
 	// 	$alerta = false;
 	// }
-
 	// Verificação se existe alerta com JSON
 	// if (isset($_GET['alerta'])) {
 	// 	$alerta = true;
 	// 	$array_alerta = (array) json_decode($_GET['alerta']);
-
 	// 	$tipo_alerta = $array_alerta["tipo"];
 	// 	$mensagem_alerta = $array_alerta["mensagem"];
 	// } else {
 	// 	$alerta = false;
 	// }
-
 	// Verificar se existe algum alerta via COOKIE
-
 	if (isset($_COOKIE['alerta']) && !is_null($_COOKIE['alerta'])) {
 		$alerta = unserialize($_COOKIE['alerta']);
 		setcookie('alerta');
 	}
 	
 	// 	session_start();
-
 	// if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
 	// 	echo "Bem vindo ao sistema. Você está logado.";
 	// } else {
 	// 	echo "Página restrita. Faça login para continuar.";
 	// }
+
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +72,7 @@
              <!-- NAVEGAÇÃO -->
 	<nav class="navbar navbar-dark bg-primary">
 		<nav class="navbar navbar-expand-lg navbar-primary bg-primary">
-			<a class="navbar-brand" href="#">NOME DO ALUNO</a>
+			<h1><?php echo $dados['nome']; ?></h1>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -84,7 +90,7 @@
 				</ul>
 					<ul href="login.php" class="nav navbar-nav navbar-right float-left">
 						<li>
-							<a href="login.php" class="text-white">Sair</a>
+							<a href="logout.php" class="text-white">Sair</a>
 						</li>
 					</ul>														
 			</div>

@@ -1,28 +1,52 @@
 <?php 
+// Conexão
+	CONST HOST = "127.0.0.1";
+	CONST USER = "root";
+	CONST PASS = "";
+	CONST DB = "crud";
 
-	session_start();
+	$con = mysqli_connect(HOST, USER, PASS, DB);
 
-	$login = $_POST['login'];
-	$senha = $_POST['senha'];
-	$entrar = $_POST['entrar'];
-
-	// $connect = mysql_connect('nome_do_servidor','nome_de_usuario','senha');
-	// $db = mysql_select_db('nome_do_banco_de_dados');
-
-
-	if (!isset($_SESSION) || $_SESSION['logado']==false) {
-		if ($login == "joao" && $senha == "123") {
-			$_SESSION['logado'] = true;
-			header('Location: listagem.php');
-		} else {
-			$_SESSION['logado'] = false;
-			echo "Credencias inválidas.";
-		}
-	} else {
-		header('Location: aula_session2.php');
+	if (!$con) {
+	    die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
 	}
 
 
+// Sessão
+	session_start();
+
+
+// Botão enviar
+	if (isset($_POST['btn-entrar'])) {
+		$erros = array ();
+		$login = mysqli_escape_string($con, $_POST['email']);
+		$senha = mysqli_escape_string($con, $_POST['senha']);
+
+		if (empty($login) or empty($senha)) {
+				$erros[] = "<li> O campo login/senha precisa ser preenchido </li>";
+			} else {
+				$sql = "SELECT email FROM alunos WHERE email = '$login' AND senha = '$senha'";
+				$resultado = mysqli_query($con, $sql);
+
+				if (mysqli_num_rows($resultado) > 0) {
+					$slq = "SELECT * FROM alunos WHERE email = '$login' AND senha = '$senha'";
+					$resultado = mysqli_query($con, $sql);
+
+					if (mysqli_num_rows($resultado) == 1) {
+						$dados = mysqli_fetch_array($resultado);
+						mysqli_close($con);
+						$_SESSION['logado'] = true;
+						$_SESSION['id_usuario'] = $dados['id'];
+
+						header('Location: listagem.php');
+					} else {
+						$erros[] = "<li> Usuário ou senha não confere</li>";
+					}
+				} else {
+					$erros[] = "<li> Usuário inexistente </li>";
+				}
+			}	
+	}
 
 
 ?>
@@ -30,28 +54,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login</title>
+	<title>index</title>
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body class="bg-secondary text-center">
+
 	<div class="container-fluid">
 		<div class="container mt-5">
 			<div class="row">
 				<div class="col-12">
 					<h1 class="text-white my-4">Logar-se</h1>
+					<?php 
+						if (!empty($erros)) {
+							foreach ($erros as $erro) {
+								echo $erro;
+							}
+						}
+
+
+					?>
 					<div class="card m-4">
 						<div class="container">
-							<form class="form-signin m-5">
-								<label for="entrarEmail" class="sr-only">Email</label>
-								<input type="email" id="entrarEmail" class="form-control" placeholder="Email" required="" autofocus="">
-								<label for="entrarSenha" class="sr-only">Senha</label>						
-								<input type="password" id="entrarSenha" class="form-control" placeholder="Password" required="" autofocus="">						
+
+							<!-- LOGIN -->
+							<form name="formLogin" id="formlogin" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="form-signin m-5">
+								<!-- EMAIL -->
+
+								<label for="email" class="sr-only">Email</label>
+								<input type="email" id="email" name="email" class="form-control" placeholder="Email" required="" autofocus="">
+
+								<!-- SENHA -->
+
+								<label for="senha" class="sr-only">Senha</label>	
+								<input type="password" id="senha" name="senha" class="form-control" placeholder="Password" required="" autofocus="">						
 								<div class="checkbox mb-3">
 									<label>
-										<input type="checkbox" value="registrar-me"> Registrar-me
+										<input type="checkbox" value="registrar-me"> Lembrar minha senha
 									</label>
-									<button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+									<button class="btn btn-lg btn-primary btn-block" type="submit" name="btn-entrar">Entrar</button>
 									<p class="mt-5 mb-3 text-muted">Entra21-2019</p>
 								</form>
 							</div>

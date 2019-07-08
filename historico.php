@@ -1,4 +1,12 @@
 <?php
+	// Sessão
+	session_start();
+
+	// Verificação
+	if (!isset($_SESSION['logado'])) {
+		header('Location: login.php?=logout');
+	}
+
 
 	// Capturando a informação do COOKIE
 	if (isset($_COOKIE['historico'])) {
@@ -11,13 +19,6 @@
 		];
 	}
 
-		session_start();
-
-	// if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
-	// 	echo "Bem vindo ao sistema. Você está logado.";
-	// } else {
-	// 	echo "Página restrita. Faça login para continuar.";
-	// }
 ?>
 
 
@@ -52,7 +53,7 @@
 				</ul>
 					<ul href="login.php" class="nav navbar-nav navbar-right float-left">
 						<li>
-							<a href="login.php" class="text-white">Sair</a>
+							<a href="logout.php" class="text-white">Sair</a>
 						</li>
 					</ul>														
 			</div>
