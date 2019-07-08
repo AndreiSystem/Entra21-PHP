@@ -39,9 +39,11 @@
 						$_SESSION['id_usuario'] = $dados['id'];
 
 						header('Location: listagem.php');
-					} else {
-						$erros[] = "<li> Usuário ou senha não confere</li>";
-					}
+					} 
+					// observar:
+					// else {
+					// 	$erros[] = "<li> Usuário ou senha não confere</li>";
+					// }
 				} else {
 					$alerta["tipo"] = "danger";
 					$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					
