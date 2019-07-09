@@ -24,7 +24,7 @@
 	$id = $_SESSION['id_usuario'];
 	$sqlAlunos = "SELECT * FROM alunos";
 	$queryAlunos = mysqli_query($con, $sqlAlunos);
-	$dados = mysqli_fetch_array($resultado);
+	$dados = mysqli_fetch_array($result);
 	mysqli_close($con);
 
 	// Verificação se existe alerta
@@ -72,7 +72,11 @@
 	<!-- NAVEGAÇÃO -->
 
 	<nav class="navbar navbar-dark bg-primary">
-		<!-- <?php echo $dados['nome']; ?> -->
+		
+		<!-- Buscar Nome do Usuário -->
+		 <!-- <?php echo $dados['nome']; ?> -->
+
+
 		<h1 class="text-white"><strong>Bem-vindo</strong></h1>
 
 
@@ -87,7 +91,7 @@
 				<ul class="navbar-nav ">
 					<li class="nav-item">
 					<a class="nav-link text-white breadcrumb-item active" href="#">Aluno</a>
-					
+
 
 					</li>
 					<li class="nav-item active">
