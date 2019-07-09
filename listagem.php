@@ -69,17 +69,29 @@
 </head>
 <body class="bg-secondary">
 
-             <!-- NAVEGAÇÃO -->
+	<!-- NAVEGAÇÃO -->
+
 	<nav class="navbar navbar-dark bg-primary">
+		<!-- <?php echo $dados['nome']; ?> -->
+		<h1 class="text-white"><strong>Bem-vindo</strong></h1>
+
+
 		<nav class="navbar navbar-expand-lg navbar-primary bg-primary">
-			<h1><?php echo $dados['nome']; ?></h1>
+
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse" id="navbarText">
-				<ul class="navbar-nav mr-auto">
+			<div class="collapse navbar-collapse left-right" id="navbarText">
+				
+				<ul class="navbar-nav ">
+					<li class="nav-item">
+					<a class="nav-link text-white breadcrumb-item active" href="#">Aluno</a>
+					
+
+					</li>
 					<li class="nav-item active">
-						<a class="nav-link" href="listagem.php">Listagem <span class="sr-only">(current)</span></a>
+						<a class="nav-link" href="listagem.php">Listagem</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#">Notas </a>
@@ -88,13 +100,15 @@
 						<a class="nav-link" href="#">Turmas </a>
 					</li>
 				</ul>
-					<ul href="login.php" class="nav navbar-nav navbar-right float-left">
-						<li>
-							<a href="logout.php" class="text-white">Sair</a>
-						</li>
-					</ul>														
+				<ul href="login.php" class="nav navbar-nav navbar-right">
+					<li>
+						<a class="btn btn-primary" href="logout.php" role="button">Sair</a>
+						<!-- <a href="logout.php" class="text-white">Sair</a> -->
+					</li>
+				</ul>
+
 			</div>
-		</nav>
+		</nav>	
 	</nav>
 
 	<div class="container-fluid">
@@ -102,17 +116,19 @@
 			<div class="row">
 				<div class="col-12 mt-1">
 
-					<h1 class="text-white my-4">Listagem de Alunos</h1>
+					<h1 class="text-white my-4 float-none">Listagem de Alunos</h1>
+
+
 					
 					<div class="card">
 						<div class="card-body">
-									<!-- PHP -->							
+							<!-- PHP -->							
 							<?php if (isset($alerta)) :?>
-							<div class="alert alert-<?=$alerta['tipo']?>">
-								<?=$alerta['mensagem']?>
-							</div>
+								<div class="alert alert-<?=$alerta['tipo']?>">
+									<?=$alerta['mensagem']?>
+								</div>
 							<?php endif;?>
-									<!-- Fim do PHP -->
+							<!-- Fim do PHP -->
 							<a href="edicao.php?id=novo" class="btn btn-success mb-3">Novo Aluno</a>
 							<a href="historico.php" class="btn btn-dark mb-3 float-right">Histórico de dados</a>
 
@@ -127,15 +143,15 @@
 								<body>
 									<!-- PHP -->
 									<?php while ($resultado = mysqli_fetch_array($queryAlunos)) { ?>			
-									<tr>
-										<td><?=$resultado["id"]?></td>
-										<td><?=$resultado["nome"]?></td>
-										<td class="text-center">
-											<a href="edicao.php?id=<?=$resultado["id"]?>" class="btn btn-primary btn-sm">
-												Editar
-											</a>
-										</td>
-									</tr>
+										<tr>
+											<td><?=$resultado["id"]?></td>
+											<td><?=$resultado["nome"]?></td>
+											<td class="text-center">
+												<a href="edicao.php?id=<?=$resultado["id"]?>" class="btn btn-primary btn-sm">
+													Editar
+												</a>
+											</td>
+										</tr>
 									<?php } ?>
 									<!-- Fim do PHP -->
 

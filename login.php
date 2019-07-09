@@ -51,6 +51,13 @@
 			}	
 	}
 
+// Checkbox lembrar a senha
+	if(isset($_POST["lembrar_senha"])){
+	$senha=$_POST["senha"];
+	$tempo_expiracao= 3600; //uma hora
+	 setcookie("lembrar", $senha, $tempo_expiracao);
+	}
+
 
 ?>
 
@@ -67,7 +74,7 @@
 		<div class="container mt-5">
 			<div class="row">
 				<div class="col-12">
-					<h1 class="text-white my-4">Logar-se</h1>
+					<h1 class="text-white my-4">Logar</h1>
 					<?php 
 						if (!empty($erros)) {
 							foreach ($erros as $erro) {
@@ -92,9 +99,12 @@
 								<label for="senha" class="sr-only">Senha</label>	
 								<input type="password" id="senha" name="senha" class="form-control" placeholder="Password" required="" autofocus="">						
 								<div class="checkbox mb-3">
-									<label>
-										<input type="checkbox" value="registrar-me"> Lembrar minha senha
-									</label>
+									
+										<div class="custom-control custom-checkbox my-2">
+											<input type="checkbox" class="custom-control-input" id="lembrar_senha" value="lembrar_senha">
+											<label class="custom-control-label" for="lembrar_senha">Lembrar minha senha</label>
+										</div>
+									
 									<?php if (isset($alerta)) :?>
 									<div class="alert alert-<?=$alerta['tipo']?>">
 										<?=$alerta['mensagem']?>
