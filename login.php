@@ -4,41 +4,30 @@
 	CONST USER = "root";
 	CONST PASS = "";
 	CONST DB = "crud";
-
 	$con = mysqli_connect(HOST, USER, PASS, DB);
-
 	if (!$con) {
 	    die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
 	}
-
-
 // Sessão
 	session_start();
-
-
 // Botão enviar
 	if (isset($_POST['btn-entrar'])) {
 		$erros = array ();
 		$login = mysqli_escape_string($con, $_POST['email']);
 		$senha = mysqli_escape_string($con, $_POST['senha']);
-
 		if (empty($login) or empty($senha)) {
 				$erros[] = "<li> O campo login/senha precisa ser preenchido </li>";
 			} else {
-				$sql = "SELECT email FROM alunos WHERE email = '$login' AND senha = '$senha'";
+				$sql = "SELECT * FROM alunos WHERE email = '$login' AND senha = '$senha'";
 				$resultado = mysqli_query($con, $sql);
-
 				if (mysqli_num_rows($resultado) > 0) {
-					$slq = "SELECT * FROM alunos WHERE email = '$login' AND senha = '$senha'";
-					$resultado = mysqli_query($con, $sql);
-
 					if (mysqli_num_rows($resultado) == 1) {
 						$dados = mysqli_fetch_array($resultado);
 						mysqli_close($con);
 						$_SESSION['logado'] = true;
-						$_SESSION['id_usuario'] = $dados['id'];
-
-						header('Location: listagem.php');
+						$_SESSION['nome'] = $dados['nome'];
+							
+						 header('Location: listagem.php');
 					} 
 					// observar:
 					// else {
@@ -50,15 +39,12 @@
 				}
 			}	
 	}
-
 // Checkbox lembrar a senha
 	if(isset($_POST["lembrar_senha"])){
 	$senha=$_POST["senha"];
 	$tempo_expiracao= 3600; //uma hora
 	 setcookie("lembrar", $senha, $tempo_expiracao);
 	}
-
-
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +59,7 @@
 	<div class="container-fluid">
 		<div class="container mt-5">
 			<div class="row">
-				<div class="col-12">
+				<div class="col-6 offset-3">
 					<h1 class="text-white my-4">Logar</h1>
 					<?php 
 						if (!empty($erros)) {
@@ -81,8 +67,6 @@
 								echo $erro;
 							}
 						}
-
-
 					?>
 					<div class="card m-4">
 						<div class="container">
