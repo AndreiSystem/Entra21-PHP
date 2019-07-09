@@ -1,180 +1,137 @@
-<?php
-	error_reporting(0);
-	// conexão com banco de dados
+<?php 
+// Conexão
 	CONST HOST = "127.0.0.1";
 	CONST USER = "root";
 	CONST PASS = "";
-	CONST DB =   "crud";
+	CONST DB = "crud";
 	$con = mysqli_connect(HOST, USER, PASS, DB);
 	if (!$con) {
 	    die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
 	}
-	
-	// Sessão
+// Sessão
 	session_start();
-
-	// Verificação
-	if (!isset($_SESSION['logado'])) {
-		header('Location: login.php?=logout');
+// Botão enviar
+	if (isset($_POST['btn-entrar'])) {
+		$erros = array ();
+		$login = mysqli_escape_string($con, $_POST['email']);
+		$senha = mysqli_escape_string($con, $_POST['senha']);
+		if (empty($login) or empty($senha)) {
+				$erros[] = "<li> O campo login/senha precisa ser preenchido </li>";
+			} else {
+				$sql = "SELECT * FROM alunos WHERE email = '$login' AND senha = '$senha'";
+				$resultado = mysqli_query($con, $sql);
+				if (mysqli_num_rows($resultado) > 0) {
+					if (mysqli_num_rows($resultado) == 1) {
+						$dados = mysqli_fetch_array($resultado);
+						mysqli_close($con);
+						$_SESSION['logado'] = true;
+						$_SESSION['nome'] = $dados['nome'];
+							
+						 header('Location: listagem.php');
+					} 
+					// observar:
+					// else {
+					// 	$erros[] = "<li> Usuário ou senha não confere</li>";
+					// }
+				} else {
+					$alerta["tipo"] = "danger";
+					$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					
+				}
+			}	
 	}
-
-
-
-	// Consulta no banco de dados
-	$id = $_SESSION['id_usuario'];
-	$sqlAlunos = "SELECT * FROM alunos";
-	$queryAlunos = mysqli_query($con, $sqlAlunos);
-	$dados = mysqli_fetch_array($result);
-	mysqli_close($con);
-
-	// Verificação se existe alerta
-	// if (isset($_GET['tipo_alerta']) && isset($_GET['mensagem_alerta'])) {
-	// 	$alerta = true;
-	// 	$tipo_alerta = $_GET['tipo_alerta'];
-	// 	$mensagem_alerta = $_GET['mensagem_alerta'];
-	// } else {
-	// 	$alerta = false;
-	// }
-	// Verificação se existe alerta com JSON
-	// if (isset($_GET['alerta'])) {
-	// 	$alerta = true;
-	// 	$array_alerta = (array) json_decode($_GET['alerta']);
-	// 	$tipo_alerta = $array_alerta["tipo"];
-	// 	$mensagem_alerta = $array_alerta["mensagem"];
-	// } else {
-	// 	$alerta = false;
-	// }
-	// Verificar se existe algum alerta via COOKIE
-	if (isset($_COOKIE['alerta']) && !is_null($_COOKIE['alerta'])) {
-		$alerta = unserialize($_COOKIE['alerta']);
-		setcookie('alerta');
+// Checkbox lembrar a senha
+	if(isset($_POST["lembrar_senha"])){
+	$senha=$_POST["senha"];
+	$tempo_expiracao= 3600; //uma hora
+	 setcookie("lembrar", $senha, $tempo_expiracao);
 	}
-	
-	// 	session_start();
-	// if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
-	// 	echo "Bem vindo ao sistema. Você está logado.";
-	// } else {
-	// 	echo "Página restrita. Faça login para continuar.";
-	// }
-
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Listagem</title>
+	<title>index</title>
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
 </head>
-<body class="bg-secondary">
-
-	<!-- NAVEGAÇÃO -->
-
-	<nav class="navbar navbar-dark bg-primary">
-		
-		<!-- Buscar Nome do Usuário -->
-		 <!-- <?php echo $dados['nome']; ?> -->
-
-
-		<h1 class="text-white"><strong>Bem-vindo</strong></h1>
-
-
-		<nav class="navbar navbar-expand-lg navbar-primary bg-primary">
-
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse left-right" id="navbarText">
-				
-				<ul class="navbar-nav ">
-					<li class="nav-item">
-					<a class="nav-link text-white breadcrumb-item active" href="#">Aluno</a>
-
-
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" href="listagem.php">Listagem</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Notas </a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Turmas </a>
-					</li>
-				</ul>
-				<ul href="login.php" class="nav navbar-nav navbar-right">
-					<li>
-						<a class="btn btn-primary" href="logout.php" role="button">Sair</a>
-						<!-- <a href="logout.php" class="text-white">Sair</a> -->
-					</li>
-				</ul>
-
-			</div>
-		</nav>	
-	</nav>
+<body class="bg-secondary text-center">
 
 	<div class="container-fluid">
-		<div class="container">
+		<div class="container mt-5">
 			<div class="row">
-				<div class="col-12 mt-1">
+				<div class="col-6 offset-3">
+					<h1 class="text-white my-4">Logar</h1>
+					<?php 
+						if (!empty($erros)) {
+							foreach ($erros as $erro) {
+								echo $erro;
+							}
+						}
+					?>
+					<div class="card m-4">
+						<div class="container">
 
-					<h1 class="text-white my-4 float-none">Listagem de Alunos</h1>
+							<!-- LOGIN -->
+							<form name="formLogin" id="formlogin" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="form-signin m-5">
+								<!-- EMAIL -->
 
+								<label for="email" class="sr-only">Email</label>
+								<input type="email" id="email" name="email" class="form-control" placeholder="Email" required="" autofocus="">
 
-					
-					<div class="card">
-						<div class="card-body">
-							<!-- PHP -->							
-							<?php if (isset($alerta)) :?>
-								<div class="alert alert-<?=$alerta['tipo']?>">
-									<?=$alerta['mensagem']?>
-								</div>
-							<?php endif;?>
-							<!-- Fim do PHP -->
-							<a href="edicao.php?id=novo" class="btn btn-success mb-3">Novo Aluno</a>
-							<a href="historico.php" class="btn btn-dark mb-3 float-right">Histórico de dados</a>
+								<!-- SENHA -->
 
-							<table class="table table-striped table-hover">
-								<thead>
-									<tr>
-										<th>Cod.</th>
-										<th>Aluno</th>
-										<th></th>
-									</tr>
-								</thead>
-								<body>
-									<!-- PHP -->
-									<?php while ($resultado = mysqli_fetch_array($queryAlunos)) { ?>			
-										<tr>
-											<td><?=$resultado["id"]?></td>
-											<td><?=$resultado["nome"]?></td>
-											<td class="text-center">
-												<a href="edicao.php?id=<?=$resultado["id"]?>" class="btn btn-primary btn-sm">
-													Editar
-												</a>
-											</td>
-										</tr>
-									<?php } ?>
-									<!-- Fim do PHP -->
-
-								</body>
-							</table>
-							
+								<label for="senha" class="sr-only">Senha</label>	
+								<input type="password" id="senha" name="senha" class="form-control" placeholder="Password" required="" autofocus="">						
+								<div class="checkbox mb-3">
+									
+										<div class="custom-control custom-checkbox my-2">
+											<input type="checkbox" class="custom-control-input" id="lembrar_senha" value="lembrar_senha">
+											<label class="custom-control-label" for="lembrar_senha">Lembrar minha senha</label>
+										</div>
+									
+									<?php if (isset($alerta)) :?>
+									<div class="alert alert-<?=$alerta['tipo']?>">
+										<?=$alerta['mensagem']?>
+									</div>
+									<?php endif;?>
+									<button class="btn btn-lg btn-primary btn-block" type="submit" name="btn-entrar">Entrar</button>
+									<p class="mt-5 mb-3 text-muted">Entra21-2019</p>
+								</form>
+							</div>
 						</div>
+
 					</div>
-				</div>				
+
+				</div>
+
+
+
 			</div>
-		</div>	
-	</div>
+		</div>
 
 
 
-	<!-- Bootstrap JS -->
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-</body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		<!-- Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	</body>
+	</html>
