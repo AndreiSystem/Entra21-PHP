@@ -1,13 +1,10 @@
-<?php
+ <?php
 	// Sessão
 	session_start();
-
 	// Verificação
 	if (!isset($_SESSION['logado'])) {
 		header('Location: login.php?=logout');
 	}
-
-
 	// Capturando a informação do COOKIE
 	if (isset($_COOKIE['historico'])) {
 		$historico_cookie = unserialize($_COOKIE['historico']);
@@ -18,7 +15,6 @@
 			'mensagem' => '<center>Você não tem histórico.</center>'
 		];
 	}
-
 ?>
 
 
@@ -33,10 +29,14 @@
 <body class="bg-secondary">
 
 
+
 	<!-- NAVEGAÇÃO -->
 
 	<nav class="navbar navbar-dark bg-primary">
-		<!-- <?php echo $dados['nome']; ?> -->
+		
+		<!-- Buscar Nome do Usuário -->
+
+
 		<h1 class="text-white"><strong>Bem-vindo</strong></h1>
 
 
@@ -50,8 +50,8 @@
 				
 				<ul class="navbar-nav ">
 					<li class="nav-item">
-					<a class="nav-link text-white breadcrumb-item active" href="#">Aluno</a>
-					
+					<a class="nav-link text-white breadcrumb-item active" href="#"><strong><?php echo $_SESSION['nome']; ?></strong></a>
+
 
 					</li>
 					<li class="nav-item active">
