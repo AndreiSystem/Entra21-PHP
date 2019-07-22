@@ -1,79 +1,22 @@
 <?php 
-// Conexão
-	CONST HOST = "127.0.0.1";
-	CONST USER = "root";
-	CONST PASS = "";
-	CONST DB = "crud";
-
-	$con = mysqli_connect(HOST, USER, PASS, DB);
-
-	if (!$con) {
-	    die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
-	}
-
-
-// Sessão
-	session_start();
-
-
-// Botão enviar
-	if (isset($_POST['btn-entrar'])) {
-		$erros = array ();
-		$login = mysqli_escape_string($con, $_POST['email']);
-		$senha = mysqli_escape_string($con, $_POST['senha']);
-
-		if (empty($login) or empty($senha)) {
-				$erros[] = "<li> O campo login/senha precisa ser preenchido </li>";
-			} else {
-				$sql = "SELECT email FROM alunos WHERE email = '$login' AND senha = '$senha'";
-				$resultado = mysqli_query($con, $sql);
-
-				if (mysqli_num_rows($resultado) > 0) {
-					$slq = "SELECT * FROM alunos WHERE email = '$login' AND senha = '$senha'";
-					$resultado = mysqli_query($con, $sql);
-
-					if (mysqli_num_rows($resultado) == 1) {
-						$dados = mysqli_fetch_array($resultado);
-						mysqli_close($con);
-						$_SESSION['logado'] = true;
-						$_SESSION['id_usuario'] = $dados['id'];
-
-						header('Location: listagem.php');
-					} 
-					// observar:
-					// else {
-					// 	$erros[] = "<li> Usuário ou senha não confere</li>";
-					// }
-				} else {
-					$alerta["tipo"] = "danger";
-					$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					
-				}
-			}	
-	}
-
-// Checkbox lembrar a senha
-	if(isset($_POST["lembrar_senha"])){
-	$senha=$_POST["senha"];
-	$tempo_expiracao= 3600; //uma hora
-	 setcookie("lembrar", $senha, $tempo_expiracao);
-	}
-
-
+	// Fazendo requisição do backend da página de login
+	require_once "backend/login.php";
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title>index</title>
+	<title>Login</title>
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body class="bg-secondary text-center">
 
+
 	<div class="container-fluid">
 		<div class="container mt-5">
 			<div class="row">
-				<div class="col-12">
+				<div class="col-6 offset-3">
 					<h1 class="text-white my-4">Logar</h1>
 					<?php 
 						if (!empty($erros)) {
@@ -81,8 +24,6 @@
 								echo $erro;
 							}
 						}
-
-
 					?>
 					<div class="card m-4">
 						<div class="container">
@@ -92,7 +33,7 @@
 								<!-- EMAIL -->
 
 								<label for="email" class="sr-only">Email</label>
-								<input type="email" id="email" name="email" class="form-control" placeholder="Email" required="" autofocus="">
+								<input type="email" id="email" name="email" class="form-control mb-1" placeholder="Email" required="" autofocus="">
 
 								<!-- SENHA -->
 
@@ -105,11 +46,7 @@
 											<label class="custom-control-label" for="lembrar_senha">Lembrar minha senha</label>
 										</div>
 									
-									<?php if (isset($alerta)) :?>
-									<div class="alert alert-<?=$alerta['tipo']?>">
-										<?=$alerta['mensagem']?>
-									</div>
-									<?php endif;?>
+<?php require_once "include/alerta.php"; ?>
 									<button class="btn btn-lg btn-primary btn-block" type="submit" name="btn-entrar">Entrar</button>
 									<p class="mt-5 mb-3 text-muted">Entra21-2019</p>
 								</form>

@@ -1,61 +1,13 @@
 <?php
-	error_reporting(0);
-	// conexão com banco de dados
-	CONST HOST = "127.0.0.1";
-	CONST USER = "root";
-	CONST PASS = "";
-	CONST DB =   "crud";
-	$con = mysqli_connect(HOST, USER, PASS, DB);
-	if (!$con) {
-	    die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
-	}
+ 	// Fazendo requisição do backend da página de listagem
+	// require_once "backend/listagem.php";
+
+	// Inicializando o Site
+	require_once "classes/aluno.class.php";
 	
-	// Sessão
-	session_start();
+	$listagem = new Aluno();
+	$listagem = $listagem->select_listagem();
 
-	// Verificação
-	if (!isset($_SESSION['logado'])) {
-		header('Location: login.php?=logout');
-	}
-
-
-
-	// Consulta no banco de dados
-	$id = $_SESSION['id_usuario'];
-	$sqlAlunos = "SELECT * FROM alunos";
-	$queryAlunos = mysqli_query($con, $sqlAlunos);
-	$dados = mysqli_fetch_array($result);
-	mysqli_close($con);
-
-	// Verificação se existe alerta
-	// if (isset($_GET['tipo_alerta']) && isset($_GET['mensagem_alerta'])) {
-	// 	$alerta = true;
-	// 	$tipo_alerta = $_GET['tipo_alerta'];
-	// 	$mensagem_alerta = $_GET['mensagem_alerta'];
-	// } else {
-	// 	$alerta = false;
-	// }
-	// Verificação se existe alerta com JSON
-	// if (isset($_GET['alerta'])) {
-	// 	$alerta = true;
-	// 	$array_alerta = (array) json_decode($_GET['alerta']);
-	// 	$tipo_alerta = $array_alerta["tipo"];
-	// 	$mensagem_alerta = $array_alerta["mensagem"];
-	// } else {
-	// 	$alerta = false;
-	// }
-	// Verificar se existe algum alerta via COOKIE
-	if (isset($_COOKIE['alerta']) && !is_null($_COOKIE['alerta'])) {
-		$alerta = unserialize($_COOKIE['alerta']);
-		setcookie('alerta');
-	}
-	
-	// 	session_start();
-	// if (isset($_SESSION['logado']) && $_SESSION['logado'] == true) {
-	// 	echo "Bem vindo ao sistema. Você está logado.";
-	// } else {
-	// 	echo "Página restrita. Faça login para continuar.";
-	// }
 
 ?>
 
@@ -70,50 +22,7 @@
 <body class="bg-secondary">
 
 	<!-- NAVEGAÇÃO -->
-
-	<nav class="navbar navbar-dark bg-primary">
-		
-		<!-- Buscar Nome do Usuário -->
-		 <!-- <?php echo $dados['nome']; ?> -->
-
-
-		<h1 class="text-white"><strong>Bem-vindo</strong></h1>
-
-
-		<nav class="navbar navbar-expand-lg navbar-primary bg-primary">
-
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse left-right" id="navbarText">
-				
-				<ul class="navbar-nav ">
-					<li class="nav-item">
-					<a class="nav-link text-white breadcrumb-item active" href="#">Aluno</a>
-
-
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" href="listagem.php">Listagem</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Notas </a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Turmas </a>
-					</li>
-				</ul>
-				<ul href="login.php" class="nav navbar-nav navbar-right">
-					<li>
-						<a class="btn btn-primary" href="logout.php" role="button">Sair</a>
-						<!-- <a href="logout.php" class="text-white">Sair</a> -->
-					</li>
-				</ul>
-
-			</div>
-		</nav>	
-	</nav>
+	<?php require_once "include/navbar.php"; ?>
 
 	<div class="container-fluid">
 		<div class="container">
@@ -127,11 +36,8 @@
 					<div class="card">
 						<div class="card-body">
 							<!-- PHP -->							
-							<?php if (isset($alerta)) :?>
-								<div class="alert alert-<?=$alerta['tipo']?>">
-									<?=$alerta['mensagem']?>
-								</div>
-							<?php endif;?>
+							<?php require_once "include/alerta.php"; ?>
+							
 							<!-- Fim do PHP -->
 							<a href="edicao.php?id=novo" class="btn btn-success mb-3">Novo Aluno</a>
 							<a href="historico.php" class="btn btn-dark mb-3 float-right">Histórico de dados</a>
@@ -146,12 +52,12 @@
 								</thead>
 								<body>
 									<!-- PHP -->
-									<?php while ($resultado = mysqli_fetch_array($queryAlunos)) { ?>			
+									<?php foreach ($listagem as $chave => $valor) { ?>			
 										<tr>
-											<td><?=$resultado["id"]?></td>
-											<td><?=$resultado["nome"]?></td>
+											<td><?=$valor["id"]?></td>
+											<td><?=$valor["nome"]?></td>
 											<td class="text-center">
-												<a href="edicao.php?id=<?=$resultado["id"]?>" class="btn btn-primary btn-sm">
+												<a href="edicao.php?id=<?=$valor["id"]?>" class="btn btn-primary btn-sm">
 													Editar
 												</a>
 											</td>
