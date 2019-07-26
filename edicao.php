@@ -1,8 +1,7 @@
 <?php
-<<<<<<< HEAD
  	// Fazendo requisição do backend da página de edição
 	require_once "backend/edicao.php";
-=======
+
 session_start();
 error_reporting(0);
 	// conexão com banco de dados
@@ -134,7 +133,6 @@ if (isset($_POST["btnExcluir"])) {
 	// 	echo "Página restrita. Faça login para continuar.";
 	// }
 }
->>>>>>> 6483730859575de51c0afa324c828484ce8d4f22
 ?>
 <!DOCTYPE html>
 <html>
@@ -149,55 +147,8 @@ if (isset($_POST["btnExcluir"])) {
 
 
 	<!-- NAVEGAÇÃO -->
-<<<<<<< HEAD
+
 	<?php require_once "include/navbar.php"; ?>
-=======
-
-	<nav class="navbar navbar-dark bg-primary">
-		
-		<!-- Buscar Nome do Usuário -->
-
-
-		<h1 class="text-white"><strong>Bem-vindo</strong></h1>
-
-
-		<nav class="navbar navbar-expand-lg navbar-primary bg-primary">
-
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse left-right" id="navbarText">
-				
-				<ul class="navbar-nav ">
-					<li class="nav-item">
-					<a class="nav-link text-white breadcrumb-item active" href="#"><strong><?php echo $_SESSION['nome']; ?></strong></a>
-
-
-					</li>
-					<li class="nav-item active">
-						<a class="nav-link" href="listagem.php">Listagem</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Notas </a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Turmas </a>
-					</li>
-				</ul>
-				<ul href="login.php" class="nav navbar-nav navbar-right">
-					<li>
-						<a class="btn btn-primary" href="logout.php" role="button">Sair</a>
-						<!-- <a href="logout.php" class="text-white">Sair</a> -->
-					</li>
-				</ul>
-
-			</div>
-		</nav>	
-	</nav>
-
-
->>>>>>> 6483730859575de51c0afa324c828484ce8d4f22
 
 	<div class="container-fluid">
 		<div class="container">

@@ -16,7 +16,7 @@
 
 		// Verificando se o ID é válido
 		public function verifica_id_valido($id) {
-			if (is_null($id) || $id < 0 || !is_int($id)) 
+			if (is_null($id) or $id < 0 or !is_int($id)) 
 				return 0;
 			else
 			return 1;		

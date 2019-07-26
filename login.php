@@ -1,55 +1,57 @@
 <?php 
-<<<<<<< HEAD
-	// Fazendo requisição do backend da página de login
-	require_once "backend/login.php";
-=======
-// Conexão
-	CONST HOST = "127.0.0.1";
-	CONST USER = "root";
-	CONST PASS = "";
-	CONST DB = "crud";
-	$con = mysqli_connect(HOST, USER, PASS, DB);
-	if (!$con) {
-	    die("ERRO: Não foi possível conectar =>" . mysqli_connect_error());
+
+	if($_POST) {
+		require_once "classes/login.class.php";
+
+		$usuario = new Usuario();
+
+		$login = addcslashes($_POST['email']);
+		$senha = addcslashes($_POST['senha']);
+
+		$user = $usuario->login($login, $senha);
+
+		if ($user == true) {
+			session_start();
+			$_SESSION['login'] = $login;
+			$_SESSION['senha'] = $senha;
+
+			header('Location: listagem.php');
+		} else {
+			$alerta["tipo"] = "danger";
+ 			$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					
+		}
 	}
-// Sessão
-	session_start();
-// Botão enviar
-	if (isset($_POST['btn-entrar'])) {
-		$erros = array ();
-		$login = mysqli_escape_string($con, $_POST['email']);
-		$senha = mysqli_escape_string($con, $_POST['senha']);
-		if (empty($login) or empty($senha)) {
-				$erros[] = "<li> O campo login/senha precisa ser preenchido </li>";
-			} else {
-				$sql = "SELECT * FROM alunos WHERE email = '$login' AND senha = '$senha'";
-				$resultado = mysqli_query($con, $sql);
-				if (mysqli_num_rows($resultado) > 0) {
-					if (mysqli_num_rows($resultado) == 1) {
-						$dados = mysqli_fetch_array($resultado);
-						mysqli_close($con);
-						$_SESSION['logado'] = true;
-						$_SESSION['nome'] = $dados['nome'];
+
+
+
+
+// // Botão enviar
+// 	if (isset($_POST['btn-entrar'])) {
+// 		$erros = array ();
+// 		$login = mysqli_escape_string($con, $_POST['email']);
+// 		$senha = mysqli_escape_string($con, $_POST['senha']);
+// 		if (empty($login) or empty($senha)) {
+// 				$erros[] = "<li> O campo login/senha precisa ser preenchido </li>";
+// 			} else {
+// 				$sql = "SELECT * FROM alunos WHERE email = '$login' AND senha = '$senha'";
+// 				$resultado = mysqli_query($con, $sql);
+// 				if (mysqli_num_rows($resultado) > 0) {
+// 					if (mysqli_num_rows($resultado) == 1) {
+// 						$dados = mysqli_fetch_array($resultado);
+// 						mysqli_close($con);
+// 						$_SESSION['logado'] = true;
+// 						$_SESSION['nome'] = $dados['nome'];
 							
-						 header('Location: listagem.php');
-					} 
-					// observar:
-					// else {
-					// 	$erros[] = "<li> Usuário ou senha não confere</li>";
-					// }
-				} else {
-					$alerta["tipo"] = "danger";
-					$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					
-				}
-			}	
-	}
-// Checkbox lembrar a senha
-	if(isset($_POST["lembrar_senha"])){
-	$senha=$_POST["senha"];
-	$tempo_expiracao= 3600; //uma hora
-	 setcookie("lembrar", $senha, $tempo_expiracao);
-	}
->>>>>>> 6483730859575de51c0afa324c828484ce8d4f22
+// 						 header('Location: listagem.php');
+// 					} 
+// 				} else {
+// 					$alerta["tipo"] = "danger";
+// 					$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					
+// 				}
+// 			}	
+// 	}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -67,13 +69,7 @@
 			<div class="row">
 				<div class="col-6 offset-3">
 					<h1 class="text-white my-4">Logar</h1>
-					<?php 
-						if (!empty($erros)) {
-							foreach ($erros as $erro) {
-								echo $erro;
-							}
-						}
-					?>
+					
 					<div class="card m-4">
 						<div class="container">
 

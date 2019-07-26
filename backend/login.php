@@ -4,13 +4,6 @@
 	// BACKEND - Sistema de Login
 	// ==============================
 	// Arquivos de configuração do projeto
-	require_once "include/configuracao.php";
-	
-	// conexao
-	require_once "include/conexao.php";
-
-// Sessão
-	session_start();
 
 
 // Botão enviar
@@ -32,10 +25,6 @@
 							
 						 header('Location: listagem.php');
 					} 
-					// observar:
-					// else {
-					// 	$erros[] = "<li> Usuário ou senha não confere</li>";
-					// }
 				} else {
 					$alerta["tipo"] = "danger";
 					$alerta["mensagem"] = "<strong>Alerta!</strong> email ou senha estão incorretas";					

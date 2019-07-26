@@ -9,7 +9,7 @@
 		CONST DB   = "crud";
 
 		// Atributos da classe
-		public $conexao;
+		private $conexao;
 
 		// Método construtor
 		public function __construct() {
@@ -29,13 +29,17 @@
 
 		}
 
+		public function getCon() {
+			return $this->con;
+		} 
+
 		public function Session() {
 			// Inicia a sessão
 			session_start();
 			
 			// Verificação
 			if (!isset($_SESSION['logado'])) {
-				header('Location: ../login.php?=logout');
+				header('Location: login.php?=logout');
 			}
 		}
 	}
