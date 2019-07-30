@@ -5,8 +5,13 @@
 
 		$usuario = new Usuario();
 
-		$login = addcslashes($_POST['email']);
-		$senha = addcslashes($_POST['senha']);
+		$login = $_POST['email'];
+		$senha = $_POST['senha'];
+		
+
+		// $login = addcslashes($_POST['email']);
+		// $senha = addcslashes($_POST['senha']);
+
 
 		$user = $usuario->login($login, $senha);
 

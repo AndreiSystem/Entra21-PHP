@@ -9,7 +9,7 @@
 		CONST DB   = "crud";
 
 		// Atributos da classe
-		private $conexao;
+		public $conexao;
 
 		// Método construtor
 		public function __construct() {
@@ -29,9 +29,9 @@
 
 		}
 
-		public function getCon() {
-			return $this->con;
-		} 
+		// public function getCon() {
+		// 	return $this->con;
+		// } 
 
 		public function Session() {
 			// Inicia a sessão
